@@ -28,10 +28,8 @@ resource "aws_s3_bucket" "static_webpage" {
   bucket = var.website_bucket_name
   acl = "public-read"
   policy = templatefile(
-    "${path.module}/policies/s3_public_read.json.tpl",
-    {
-      bucket_name = var.website_bucket_name
-    }
+    "${path.module}/policies/iam/s3_public_read.json.tpl",
+    {bucket_name = var.website_bucket_name}
     )
 
   website {
