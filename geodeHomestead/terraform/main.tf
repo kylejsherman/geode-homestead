@@ -36,3 +36,35 @@ resource "aws_s3_bucket" "static_webpage" {
     index_document = "index.html"
   }
 }
+
+resource "aws_s3_bucket" "deploy_bucket" {
+  bucket = var.deploy_bucket_name
+  acl = "private"
+}
+
+resource "aws_s3_bucket_object" "go_zip_package" {
+  bucket = aws_s3_bucket.deploy_bucket.id
+  key = var.go_function_package
+  source = "../${var.go_function_package}"
+  source_hash = filemd5("../${var.go_function_package}")
+}
+
+resource "aws_iam_role" "role_for_lambda" {
+  name = "role_for_${var.go_function_name}"
+  assume_role_policy = templatefile(
+    "${path.module}/policies/iam/assume_role_policy.json.tpl",
+    {service = "lambda.amazonaws.com"}
+    )
+}
+
+resource "aws_lambda_function" "go_function" {
+  function_name = var.go_function_name
+  role = aws_iam_role.role_for_lambda.arn
+  s3_bucket = aws_s3_bucket.deploy_bucket.id
+  s3_key = aws_s3_bucket_object.go_zip_package.id
+  source_code_hash = filebase64sha256("../${var.go_function_package}")
+
+  runtime = "go1.x"
+  handler = "main"
+  timeout = 15
+}

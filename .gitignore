@@ -27,7 +27,7 @@ Temporary Items
 .apdisk
 
 
-### Ignore files that do not need to be tracked created by terraform`
+### Ignore files that do not need to be tracked created by terraform
 # Local .terraform directories
 **/.terraform/*
 
@@ -63,3 +63,30 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+### Ignore go files
+# If you prefer the allow list template instead of the deny list, see community template:
+# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
+#
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+
+# Ignore non source files
+geodeHomestead/go/**
+!geodeHomestead/go/*.go
